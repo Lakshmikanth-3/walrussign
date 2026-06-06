@@ -20,28 +20,23 @@ This keeps the document contents off-chain while preserving a permanent, verifia
 
 ```mermaid
 graph TD
-    classDef frontend fill:#1e293b,stroke:#00d4ff,stroke-width:2px,color:#fff
-    classDef walrus fill:#0f172a,stroke:#ffcc00,stroke-width:2px,color:#fff
-    classDef sui fill:#0f172a,stroke:#4ade80,stroke-width:2px,color:#fff
-    classDef user fill:#334155,stroke:#fff,stroke-width:2px,color:#fff
-
-    UserA((Party A<br/>Creator)):::user
-    UserB((Party B<br/>Signer)):::user
+    UserA((Party A<br/>Creator))
+    UserB((Party B<br/>Signer))
 
     subgraph "WalrusSign dApp (Client-Side)"
-        React[React / Vite Frontend]:::frontend
-        DappKit["mysten dapp-kit<br/>Wallet Adapter"]:::frontend
-        LocalHash[Local SHA-256<br/>Hasher]:::frontend
+        React[React / Vite Frontend]
+        DappKit["mysten dapp-kit<br/>Wallet Adapter"]
+        LocalHash[Local SHA-256<br/>Hasher]
     end
 
     subgraph "Walrus Storage Network"
-        Publisher[Walrus Publisher Node]:::walrus
-        Aggregator[Walrus Aggregator Node]:::walrus
+        Publisher[Walrus Publisher Node]
+        Aggregator[Walrus Aggregator Node]
     end
 
     subgraph "Sui Blockchain"
-        SmartContract[WalrusSign Move Contract]:::sui
-        DocObject[(On-Chain Document Object<br/>Blob ID, Hash, Signatures)]:::sui
+        SmartContract[WalrusSign Move Contract]
+        DocObject[(On-Chain Document Object<br/>Blob ID, Hash, Signatures)]
     end
 
     UserA -->|1. Uploads PDF| React
@@ -77,34 +72,28 @@ sequenceDiagram
     PartyA->>App: Drag & Drop PDF Contract
     App->>App: Compute SHA-256 Hash Locally
 
-    rect rgb(20, 30, 50)
-        Note over App,Walrus: Phase 1: Decentralized Storage
-        App->>Walrus: Upload raw PDF bytes (Publisher)
-        Walrus-->>App: Return immutable blob_id
-    end
+    Note over App,Walrus: Phase 1: Decentralized Storage
+    App->>Walrus: Upload raw PDF bytes (Publisher)
+    Walrus-->>App: Return immutable blob_id
 
-    rect rgb(20, 50, 30)
-        Note over App,Sui: Phase 2: On-Chain Minting
-        App->>Sui: Call create_document(blob_id, hash, party_b)
-        Sui-->>Sui: Mint shared Document object
-        Sui-->>App: Return object_id
-    end
+    Note over App,Sui: Phase 2: On-Chain Minting
+    App->>Sui: Call create_document(blob_id, hash, party_b)
+    Sui-->>Sui: Mint shared Document object
+    Sui-->>App: Return object_id
 
     App->>PartyA: Display Shareable Link
     PartyA->>PartyB: Send Link via Email/Chat
 
-    rect rgb(50, 30, 20)
-        Note over PartyB,Sui: Phase 3: Verification & Signing
-        PartyB->>App: Open Signing Link
-        App->>Sui: Fetch Document object state
-        App->>Walrus: Fetch raw PDF bytes via blob_id
-        Walrus-->>App: Return PDF
-        App->>App: Recompute SHA-256 of downloaded PDF
-        App->>App: Verify downloaded hash == on-chain hash
-        PartyB->>App: Click Sign Document
-        App->>Sui: Call sign(document_object)
-        Sui-->>Sui: Lock document and record timestamp
-    end
+    Note over PartyB,Sui: Phase 3: Verification & Signing
+    PartyB->>App: Open Signing Link
+    App->>Sui: Fetch Document object state
+    App->>Walrus: Fetch raw PDF bytes via blob_id
+    Walrus-->>App: Return PDF
+    App->>App: Recompute SHA-256 of downloaded PDF
+    App->>App: Verify downloaded hash == on-chain hash
+    PartyB->>App: Click Sign Document
+    App->>Sui: Call sign(document_object)
+    Sui-->>Sui: Lock document and record timestamp
 
     Sui-->>App: Transaction Success
     App->>PartyB: Display Fully Executed
