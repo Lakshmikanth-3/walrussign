@@ -1,0 +1,14 @@
+# App artifacts
+app/node_modules/
+app/dist/
+app/.env
+
+# Move contract artifacts
+contract/build/
+contract/Published.toml
+contract/*.exe
+contract/*.tgz
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
