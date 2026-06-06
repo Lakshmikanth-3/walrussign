@@ -30,7 +30,7 @@ graph TD
 
     subgraph "WalrusSign dApp (Client-Side)"
         React[React / Vite Frontend]:::frontend
-        DappKit[@mysten/dapp-kit<br/>Wallet Adapter]:::frontend
+        DappKit["mysten dapp-kit<br/>Wallet Adapter"]:::frontend
         LocalHash[Local SHA-256<br/>Hasher]:::frontend
     end
 
